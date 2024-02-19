@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgresql:
+    environment:
+      - "PGDATA=/var/lib/postgresql/data/pgdata"
+      - "POSTGRES_DB=development_website"
+      - "POSTGRES_HOST_AUTH_METHOD=scram-sha-256"
+      - "POSTGRES_INITDB_ARGS=--no-locale --data-checksums --auth-host=scram-sha-256"
+      - "POSTGRES_PASSWORD=correct horse battery staple"
+      - "POSTGRES_USER=development_website"
+    image: "postgres:16.1-alpine3.19"
+    volumes:
+      - "./migrations:/docker-entrypoint-initdb.d"
+      - "postgresql_data:/var/lib/postgresql/data/pgdata"
+
+  website:
+    build: "."
+    depends_on:
+      - "postgresql"
+    environment:
+      - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/api.c032.dev/postgresql_connection_string"
+      - "PORT=8000"
+    links:
+      - "postgresql:postgresql"
+    ports:
+      - "127.0.0.1:3000:8000"
+    volumes:
+      - "./docker/postgresql_connection_string:/usr/local/etc/api.c032.dev/postgresql_connection_string"
+
+volumes:
+  postgresql_data:
