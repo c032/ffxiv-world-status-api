@@ -12,8 +12,7 @@ import { getWorldQuery } from "./queries/get-world.query";
 
 @Injectable()
 export class FfxivService {
-  constructor(private readonly pgClientService: PgClientService) {
-  }
+  constructor(private readonly pgClientService: PgClientService) {}
 
   public async getAllWorlds(): Promise<FfxivWorld[]> {
     return this.pgClientService.withClient<FfxivWorld[]>(async (client) => {
@@ -33,9 +32,12 @@ export class FfxivService {
 
   public async getWorldGroup(worldGroupName: string): Promise<FfxivWorld[]> {
     return this.pgClientService.withClient<FfxivWorld[]>(async (client) => {
-      const worldsDto = await getWorldGroupQuery.run({
-        groupName: worldGroupName,
-      }, client);
+      const worldsDto = await getWorldGroupQuery.run(
+        {
+          groupName: worldGroupName,
+        },
+        client,
+      );
 
       const worlds: FfxivWorld[] = worldsDto.map((row) => ({
         group: row.world_group,
@@ -49,27 +51,35 @@ export class FfxivService {
     });
   }
 
-  public async getWorld(worldGroupName: string, worldName: string): Promise<FfxivWorld|null> {
-    return this.pgClientService.withClient<FfxivWorld|null>(async (client) => {
-      const worldsDto = await getWorldQuery.run({
-        groupName: worldGroupName,
-        worldName: worldName,
-      }, client);
+  public async getWorld(
+    worldGroupName: string,
+    worldName: string,
+  ): Promise<FfxivWorld | null> {
+    return this.pgClientService.withClient<FfxivWorld | null>(
+      async (client) => {
+        const worldsDto = await getWorldQuery.run(
+          {
+            groupName: worldGroupName,
+            worldName: worldName,
+          },
+          client,
+        );
 
-      const worlds: FfxivWorld[] = worldsDto.map((row) => ({
-        group: row.world_group,
-        name: row.world_name,
-        category: toServerCategory(row.world_category),
-        serverStatus: toServerStatus(row.world_status),
-        canCreateNewCharacters: row.can_create_new_characters,
-      }));
+        const worlds: FfxivWorld[] = worldsDto.map((row) => ({
+          group: row.world_group,
+          name: row.world_name,
+          category: toServerCategory(row.world_category),
+          serverStatus: toServerStatus(row.world_status),
+          canCreateNewCharacters: row.can_create_new_characters,
+        }));
 
-      const world = worlds[0];
-      if (!world) {
-        return null;
-      }
+        const world = worlds[0];
+        if (!world) {
+          return null;
+        }
 
-      return world;
-    });
+        return world;
+      },
+    );
   }
 }

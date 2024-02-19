@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 import * as PgPool from "pg-pool";
 
 import { ConfigModule } from "../config/config.module";
@@ -15,9 +15,10 @@ import { PgClientService } from "./pgclient.service";
     {
       provide: "PG_POOL",
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => new PgPool({
-        connectionString: config.postgresqlConnectionString,
-      }),
+      useFactory: (config: ConfigService) =>
+        new PgPool({
+          connectionString: config.postgresqlConnectionString,
+        }),
     },
     PgClientService,
   ],

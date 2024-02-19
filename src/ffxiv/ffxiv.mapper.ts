@@ -26,13 +26,17 @@ export function toFfxivWorldDto(world: FfxivWorld): FfxivWorldDto {
   };
 }
 
-export function toFfxivWorldResponseDto(world: FfxivWorld): FfxivWorldResponseDto {
+export function toFfxivWorldResponseDto(
+  world: FfxivWorld,
+): FfxivWorldResponseDto {
   return {
     world: toFfxivWorldDto(world),
   };
 }
 
-export function toFfxivWorldsResponseDto(worlds: FfxivWorld[]): FfxivWorldsResponseDto {
+export function toFfxivWorldsResponseDto(
+  worlds: FfxivWorld[],
+): FfxivWorldsResponseDto {
   return {
     worlds: worlds.map<FfxivWorldDto>((world) => toFfxivWorldDto(world)),
   };

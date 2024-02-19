@@ -1,7 +1,10 @@
 import { Controller, Get, Param, NotFoundException } from "@nestjs/common";
 
 import { FfxivService } from "./ffxiv.service";
-import { toFfxivWorldsResponseDto, toFfxivWorldResponseDto } from "./ffxiv.mapper";
+import {
+  toFfxivWorldsResponseDto,
+  toFfxivWorldResponseDto,
+} from "./ffxiv.mapper";
 
 import { FfxivWorldsResponseDto } from "./dto/ffxiv-worlds-response.dto";
 import { FfxivWorldResponseDto } from "./dto/ffxiv-world-response.dto";
@@ -37,7 +40,9 @@ export class FfxivController {
   ): Promise<FfxivWorldResponseDto> {
     const world = await this.ffxivService.getWorld(worldGroup, worldName);
     if (world === null) {
-      throw new NotFoundException(`Invalid world "${worldName}", group "${worldGroup}", or both.`);
+      throw new NotFoundException(
+        `Invalid world "${worldName}", group "${worldGroup}", or both.`,
+      );
     }
 
     return toFfxivWorldResponseDto(world);

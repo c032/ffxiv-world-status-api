@@ -9,14 +9,8 @@ import { PgClientService } from "./database/pgclient.service";
 import { FfxivModule } from "./ffxiv/ffxiv.module";
 
 @Module({
-  imports: [
-    ConfigModule,
-    PostgresqlModule,
-    FfxivModule,
-  ],
+  imports: [ConfigModule, PostgresqlModule, FfxivModule],
   controllers: [AppController],
-  providers: [
-    AppService,
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

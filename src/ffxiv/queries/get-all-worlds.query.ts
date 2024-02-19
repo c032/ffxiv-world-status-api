@@ -1,4 +1,4 @@
-import { sql } from '@pgtyped/runtime';
+import { sql } from "@pgtyped/runtime";
 
 export interface GetAllWorldsQueryResult {
   batch_id: number;
