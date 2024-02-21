@@ -66,7 +66,6 @@ function isServerStatus(
     .includes(maybeServerStatus);
 }
 
-// TODO: Move this to a mapper file.
 export function toServerStatus(maybeServerStatus: string): ServerStatus {
   if (!isServerStatus(maybeServerStatus)) {
     throw new Error(`Not a server status: ${maybeServerStatus}`);
