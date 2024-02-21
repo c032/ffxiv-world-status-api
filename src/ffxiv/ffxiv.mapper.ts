@@ -7,6 +7,10 @@ import { FfxivWorldsResponseDto } from "./dto/ffxiv-worlds-response.dto";
 import { ServerCategory } from "./enums/server-category.enum";
 import { ServerStatus } from "./enums/server-status.enum";
 
+import { GetAllWorldsQueryResult } from "./queries/get-all-worlds.query";
+import { GetWorldGroupQueryResult } from "./queries/get-world-group.query";
+import { GetWorldQueryResult } from "./queries/get-world.query";
+
 export function toFfxivWorldDto(world: FfxivWorld): FfxivWorldDto {
   return {
     group: world.group,
@@ -72,4 +76,18 @@ export function toServerStatus(maybeServerStatus: string): ServerStatus {
   }
 
   return maybeServerStatus;
+}
+
+export function toFfxivWorld(
+  row: GetAllWorldsQueryResult | GetWorldGroupQueryResult | GetWorldQueryResult,
+): FfxivWorld {
+  const ffxivWorld: FfxivWorld = {
+    group: row.world_group,
+    name: row.world_name,
+    category: toServerCategory(row.world_category),
+    serverStatus: toServerStatus(row.world_status),
+    canCreateNewCharacters: row.can_create_new_characters,
+  };
+
+  return ffxivWorld;
 }

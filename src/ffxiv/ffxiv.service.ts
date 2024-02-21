@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 import { PgClientService } from "../database/pgclient.service";
 
-import { toServerCategory, toServerStatus } from "./ffxiv.mapper";
+import { toServerCategory, toServerStatus, toFfxivWorld } from "./ffxiv.mapper";
 
 import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
 
@@ -18,13 +18,7 @@ export class FfxivService {
     return this.pgClientService.withClient<FfxivWorld[]>(async (client) => {
       const worldsDto = await getAllWorldsQuery.run({}, client);
 
-      const worlds: FfxivWorld[] = worldsDto.map((row) => ({
-        group: row.world_group,
-        name: row.world_name,
-        category: toServerCategory(row.world_category),
-        serverStatus: toServerStatus(row.world_status),
-        canCreateNewCharacters: row.can_create_new_characters,
-      }));
+      const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
       return worlds;
     });
@@ -39,13 +33,7 @@ export class FfxivService {
         client,
       );
 
-      const worlds: FfxivWorld[] = worldsDto.map((row) => ({
-        group: row.world_group,
-        name: row.world_name,
-        category: toServerCategory(row.world_category),
-        serverStatus: toServerStatus(row.world_status),
-        canCreateNewCharacters: row.can_create_new_characters,
-      }));
+      const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
       return worlds;
     });
@@ -65,13 +53,7 @@ export class FfxivService {
           client,
         );
 
-        const worlds: FfxivWorld[] = worldsDto.map((row) => ({
-          group: row.world_group,
-          name: row.world_name,
-          category: toServerCategory(row.world_category),
-          serverStatus: toServerStatus(row.world_status),
-          canCreateNewCharacters: row.can_create_new_characters,
-        }));
+        const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
         const world = worlds[0];
         if (!world) {
