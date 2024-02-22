@@ -1,17 +1,6 @@
 version: "3.8"
 
 services:
-  postgresql:
-    environment:
-      - "POSTGRES_DB=test_api_e2e"
-      - "POSTGRES_HOST_AUTH_METHOD=scram-sha-256"
-      - "POSTGRES_INITDB_ARGS=--no-locale --data-checksums --auth-host=scram-sha-256"
-      - "POSTGRES_PASSWORD=correct horse battery staple"
-      - "POSTGRES_USER=test_api_e2e"
-    image: "postgres:16.1-alpine3.19"
-    volumes:
-      - "./migrations:/docker-entrypoint-initdb.d"
-
   api-e2e:
     build:
       context: "."
@@ -25,3 +14,14 @@ services:
       - "postgresql:postgresql"
     volumes:
       - "./docker/postgresql_connection_string_test:/usr/local/etc/api.c032.dev/postgresql_connection_string_test"
+
+  postgresql:
+    environment:
+      - "POSTGRES_DB=test_api_e2e"
+      - "POSTGRES_HOST_AUTH_METHOD=scram-sha-256"
+      - "POSTGRES_INITDB_ARGS=--no-locale --data-checksums --auth-host=scram-sha-256"
+      - "POSTGRES_PASSWORD=correct horse battery staple"
+      - "POSTGRES_USER=test_api_e2e"
+    image: "postgres:16.1-alpine3.19"
+    volumes:
+      - "./migrations:/docker-entrypoint-initdb.d"
