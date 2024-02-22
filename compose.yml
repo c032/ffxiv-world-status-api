@@ -14,7 +14,7 @@ services:
       - "./migrations:/docker-entrypoint-initdb.d"
       - "postgresql_data:/var/lib/postgresql/data/pgdata"
 
-  website:
+  api:
     build: "."
     depends_on:
       - "postgresql"
