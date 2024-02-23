@@ -81,6 +81,9 @@ export class FfxivPrometheusService {
   }
 
   private initMetrics(): void {
+    // TODO: Initialize metrics on first use, instead of calling this method in
+    // the constructor.
+
     const ffxivWorldGauges = {
       chaos_omega_online: {
         help: "Omega (Chaos) server online status.",

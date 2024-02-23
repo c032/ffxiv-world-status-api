@@ -128,5 +128,13 @@ describe("FfxivController", () => {
         ].join("\n"),
       );
     });
+
+    it.todo("includes information about all known worlds");
+
+    // Even though it's not every day that a new group (datacenter) or world
+    // (server) are added, these tests should still make sure that we're
+    // handling such situation in a robust way.
+    it.todo("automatically creates a metric when a new group is added");
+    it.todo("automatically creates a metric when a new world is added");
   });
 });
