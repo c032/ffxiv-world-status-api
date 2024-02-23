@@ -1,6 +1,8 @@
 import { Test } from "@nestjs/testing";
 import { createMock, DeepMocked } from "@golevelup/ts-jest";
 
+import { Registry as PrometheusRegistry } from "prom-client";
+
 import { FfxivController } from "./ffxiv.controller";
 import { FfxivService } from "./ffxiv.service";
 import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
@@ -17,6 +19,10 @@ describe("FfxivController", () => {
       controllers: [FfxivController],
       providers: [
         FfxivPrometheusService,
+        {
+          provide: "FfxivPrometheusRegistry",
+          useClass: PrometheusRegistry,
+        },
         {
           provide: FfxivService,
           useValue: createMock<FfxivService>(),

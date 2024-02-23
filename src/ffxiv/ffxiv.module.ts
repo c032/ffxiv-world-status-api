@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
 
+import { Registry as PrometheusRegistry } from "prom-client";
+
 import { PostgresqlModule } from "../database/postgresql.module";
 
 import { FfxivController } from "./ffxiv.controller";
@@ -9,6 +11,13 @@ import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
 @Module({
   imports: [PostgresqlModule],
   controllers: [FfxivController],
-  providers: [FfxivService, FfxivPrometheusService],
+  providers: [
+    FfxivService,
+    {
+      provide: "FfxivPrometheusRegistry",
+      useClass: PrometheusRegistry,
+    },
+    FfxivPrometheusService,
+  ],
 })
 export class FfxivModule {}

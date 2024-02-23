@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { Registry, Gauge } from "prom-client";
 
 import { FfxivService } from "./ffxiv.service";
@@ -12,8 +12,6 @@ interface CollectFunction<T> {
 
 @Injectable()
 export class FfxivPrometheusService {
-  private readonly registry: Registry = new Registry();
-
   private ffxivWorlds: Promise<FfxivWorld[]> = Promise.resolve<FfxivWorld[]>(
     [],
   );
@@ -22,7 +20,10 @@ export class FfxivPrometheusService {
   // TODO: Get from config.
   private ffxivWorldsTtlMilliseconds = 15_000;
 
-  constructor(private readonly ffxivService: FfxivService) {
+  constructor(
+    @Inject("FfxivPrometheusRegistry") private readonly registry: Registry,
+    private readonly ffxivService: FfxivService,
+  ) {
     this.initMetrics();
   }
 
