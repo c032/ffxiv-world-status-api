@@ -26,6 +26,27 @@ export class FfxivPrometheusService {
     this.initMetrics();
   }
 
+  public async getMetrics(): Promise<string> {
+    return await this.registry.metrics();
+  }
+
+  private initMetrics(): void {
+    // TODO: Initialize metrics on first use, instead of calling this method in
+    // the constructor.
+
+    const ffxivWorldGauges = {
+      chaos_omega_online: {
+        help: "Omega (Chaos) server online status.",
+        collect: this.collectFfxivWorld("chaos", "omega"),
+      },
+    };
+
+    for (const [key, value] of Object.entries(ffxivWorldGauges)) {
+      const { help, collect } = value;
+      this.createGauge(key, help, collect);
+    }
+  }
+
   private collectFfxivWorld(
     worldGroup: string,
     worldName: string,
@@ -42,6 +63,22 @@ export class FfxivPrometheusService {
         g.set(0);
       }
     };
+  }
+
+  private async getWorld(
+    groupName: string,
+    worldName: string,
+  ): Promise<FfxivWorld | null> {
+    const allWorlds = await this.getFfxivWorlds();
+    const filteredWorlds: FfxivWorld[] = allWorlds.filter(
+      (world) =>
+        world.group.toLowerCase() === groupName.toLowerCase() &&
+        world.name.toLowerCase() === worldName.toLowerCase(),
+    );
+
+    const world = filteredWorlds[0] || null;
+
+    return world;
   }
 
   private async getFfxivWorlds(): Promise<FfxivWorld[]> {
@@ -64,39 +101,6 @@ export class FfxivPrometheusService {
     return await this.ffxivWorlds;
   }
 
-  private async getWorld(
-    groupName: string,
-    worldName: string,
-  ): Promise<FfxivWorld | null> {
-    const allWorlds = await this.getFfxivWorlds();
-    const filteredWorlds: FfxivWorld[] = allWorlds.filter(
-      (world) =>
-        world.group.toLowerCase() === groupName.toLowerCase() &&
-        world.name.toLowerCase() === worldName.toLowerCase(),
-    );
-
-    const world = filteredWorlds[0] || null;
-
-    return world;
-  }
-
-  private initMetrics(): void {
-    // TODO: Initialize metrics on first use, instead of calling this method in
-    // the constructor.
-
-    const ffxivWorldGauges = {
-      chaos_omega_online: {
-        help: "Omega (Chaos) server online status.",
-        collect: this.collectFfxivWorld("chaos", "omega"),
-      },
-    };
-
-    for (const [key, value] of Object.entries(ffxivWorldGauges)) {
-      const { help, collect } = value;
-      this.createGauge(key, help, collect);
-    }
-  }
-
   private createGauge(
     name: string,
     help: string,
@@ -112,9 +116,5 @@ export class FfxivPrometheusService {
     });
 
     return gauge;
-  }
-
-  public async getMetrics(): Promise<string> {
-    return await this.registry.metrics();
   }
 }
