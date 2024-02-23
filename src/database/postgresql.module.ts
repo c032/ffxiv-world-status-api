@@ -4,8 +4,6 @@ import * as PgPool from "pg-pool";
 import { ConfigModule } from "../config/config.module";
 import { ConfigService } from "../config/config.service";
 
-import { Pool } from "./types/pool";
-import { Client } from "./types/client";
 import { PgClientService } from "./pgclient.service";
 
 @Module({

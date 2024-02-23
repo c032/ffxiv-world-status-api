@@ -53,7 +53,7 @@ export class FfxivPrometheusService {
     worldName: string,
   ): CollectFunction<Gauge> {
     return async (g: Gauge) => {
-      const world = await this.getWorld("chaos", "omega");
+      const world = await this.getWorld(worldGroup, worldName);
 
       const isOnline =
         world !== null && world.serverStatus === ServerStatus.Online;

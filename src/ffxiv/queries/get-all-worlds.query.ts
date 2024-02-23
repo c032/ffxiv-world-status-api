@@ -11,7 +11,7 @@ export interface GetAllWorldsQueryResult {
 }
 
 export const getAllWorldsQuery = sql<{
-  params: {};
+  params: Record<string, never>;
   result: GetAllWorldsQueryResult;
 }>`
   select

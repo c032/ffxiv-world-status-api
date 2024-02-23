@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 import { PgClientService } from "../database/pgclient.service";
 
-import { toServerCategory, toServerStatus, toFfxivWorld } from "./ffxiv.mapper";
+import { toFfxivWorld } from "./ffxiv.mapper";
 
 import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
 
