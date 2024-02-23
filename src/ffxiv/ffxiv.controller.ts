@@ -1,17 +1,34 @@
-import { Controller, Get, Param, NotFoundException } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+  NotFoundException,
+  Header,
+} from "@nestjs/common";
 
 import { FfxivService } from "./ffxiv.service";
 import {
   toFfxivWorldsResponseDto,
   toFfxivWorldResponseDto,
 } from "./ffxiv.mapper";
+import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
 
 import { FfxivWorldsResponseDto } from "./dto/ffxiv-worlds-response.dto";
 import { FfxivWorldResponseDto } from "./dto/ffxiv-world-response.dto";
 
 @Controller("ffxiv")
 export class FfxivController {
-  constructor(private readonly ffxivService: FfxivService) {}
+  constructor(
+    private readonly ffxivService: FfxivService,
+    private readonly ffxivPrometheusService: FfxivPrometheusService,
+  ) {}
+
+  @Get("/prometheus")
+  @Header("Content-Type", "text/plain")
+  public async getPrometheus(): Promise<string> {
+    const metrics: string = await this.ffxivPrometheusService.getMetrics();
+    return metrics;
+  }
 
   @Get("/worlds")
   public async getWorlds(): Promise<FfxivWorldsResponseDto> {
