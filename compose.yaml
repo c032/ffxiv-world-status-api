@@ -6,14 +6,14 @@ services:
     depends_on:
       - "postgresql"
     environment:
-      - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/api.c032.dev/postgresql_connection_string"
+      - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/api.c032.dev/postgresql_connection_string_development"
       - "PORT=8000"
     links:
       - "postgresql:postgresql"
     ports:
       - "127.0.0.1:3000:8000"
     volumes:
-      - "./docker/postgresql_connection_string:/usr/local/etc/api.c032.dev/postgresql_connection_string"
+      - "./docker/postgresql_connection_string_development:/usr/local/etc/api.c032.dev/postgresql_connection_string_development"
 
   postgresql:
     environment:
