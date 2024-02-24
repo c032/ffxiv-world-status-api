@@ -298,5 +298,65 @@ describe("FfxivController", () => {
         ].join("\n"),
       );
     });
+
+    // TODO: Should I actually delete the metric?
+    it("set world status to -1 if there's no data", async () => {
+      jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
+        Promise.resolve([
+          {
+            group: "Light",
+            name: "Alpha",
+            serverStatus: ServerStatus.Online,
+
+            // Not required for the test.
+            category: ServerCategory.Standard,
+            canCreateNewCharacters: false,
+          },
+          {
+            group: "Light",
+            name: "Lich",
+            serverStatus: ServerStatus.Online,
+
+            // Not required for the test.
+            category: ServerCategory.Standard,
+            canCreateNewCharacters: false,
+          },
+        ]),
+      );
+
+      const firstResult: string = await ffxivController.getPrometheus();
+
+      jest
+        .spyOn(ffxivService, "getAllWorlds")
+        .mockImplementation(() => Promise.resolve([]));
+
+      const secondResult: string = await ffxivController.getPrometheus();
+
+      expect(firstResult).toEqual(
+        [
+          "# HELP light_alpha_online Alpha (Light) server online status.",
+          "# TYPE light_alpha_online gauge",
+          "light_alpha_online 1",
+          "",
+          "# HELP light_lich_online Lich (Light) server online status.",
+          "# TYPE light_lich_online gauge",
+          "light_lich_online 1",
+          "",
+        ].join("\n"),
+      );
+
+      expect(secondResult).toEqual(
+        [
+          "# HELP light_alpha_online Alpha (Light) server online status.",
+          "# TYPE light_alpha_online gauge",
+          "light_alpha_online -1",
+          "",
+          "# HELP light_lich_online Lich (Light) server online status.",
+          "# TYPE light_lich_online gauge",
+          "light_lich_online -1",
+          "",
+        ].join("\n"),
+      );
+    });
   });
 });
