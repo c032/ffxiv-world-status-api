@@ -44,6 +44,12 @@ background job.
 docker compose up --abort-on-container-exit --build
 ```
 
+### Request
+
+```sh
+curl 'http://localhost:3000/ffxiv/worlds'
+```
+
 ## Testing
 
 ### Unit tests
