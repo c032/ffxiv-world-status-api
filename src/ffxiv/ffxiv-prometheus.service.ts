@@ -18,34 +18,19 @@ export class FfxivPrometheusService {
   private ffxivWorldsUpdatedAt: number = 0;
 
   // TODO: Get from config.
-  private ffxivWorldsTtlMilliseconds = 15_000;
+  private readonly ffxivWorldsTtlMilliseconds = 15_000;
+
+  private readonly gauges: Record<string, Gauge | undefined> = {};
 
   constructor(
     @Inject("FfxivPrometheusRegistry") private readonly registry: Registry,
     private readonly ffxivService: FfxivService,
-  ) {
-    this.initMetrics();
-  }
+  ) {}
 
   public async getMetrics(): Promise<string> {
+    await this.updateMetrics();
+
     return await this.registry.metrics();
-  }
-
-  private initMetrics(): void {
-    // TODO: Initialize metrics on first use, instead of calling this method in
-    // the constructor.
-
-    const ffxivWorldGauges = {
-      chaos_omega_online: {
-        help: "Omega (Chaos) server online status.",
-        collect: this.collectFfxivWorld("chaos", "omega"),
-      },
-    };
-
-    for (const [key, value] of Object.entries(ffxivWorldGauges)) {
-      const { help, collect } = value;
-      this.createGauge(key, help, collect);
-    }
   }
 
   private collectFfxivWorld(
@@ -82,6 +67,21 @@ export class FfxivPrometheusService {
     return world;
   }
 
+  private async updateMetrics() {
+    const worlds = await this.getFfxivWorlds();
+
+    worlds.forEach((world) => {
+      const metricName = this.ffxivWorldToMetricName(world.group, world.name);
+      const metricHelp = `${world.name} (${world.group}) server online status.`;
+
+      this.createGauge(
+        metricName,
+        metricHelp,
+        this.collectFfxivWorld(world.group, world.name),
+      );
+    });
+  }
+
   private async getFfxivWorlds(): Promise<FfxivWorld[]> {
     const now = Date.now();
 
@@ -107,6 +107,11 @@ export class FfxivPrometheusService {
     help: string,
     collect: CollectFunction<Gauge>,
   ): Gauge {
+    const existingGauge = this.gauges[name];
+    if (existingGauge) {
+      return existingGauge;
+    }
+
     const gauge = new Gauge({
       name,
       help,
@@ -116,6 +121,23 @@ export class FfxivPrometheusService {
       },
     });
 
+    this.gauges[name] = gauge;
+
     return gauge;
+  }
+
+  private ffxivWorldToMetricName(
+    worldGroup: string,
+    worldName: string,
+  ): string {
+    return `${this.toSnakeCase(worldGroup)}_${this.toSnakeCase(worldName)}_online`;
+  }
+
+  // TODO: Extract to separate file.
+  private toSnakeCase(input: string): string {
+    return input
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "_")
+      .replace(/_+/g, "_");
   }
 }
