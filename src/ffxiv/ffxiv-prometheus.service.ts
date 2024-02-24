@@ -17,9 +17,6 @@ export class FfxivPrometheusService {
   );
   private ffxivWorldsUpdatedAt: number = 0;
 
-  // TODO: Get from config.
-  private readonly ffxivWorldsTtlMilliseconds = 15_000;
-
   private readonly gauges: Record<string, Gauge | undefined> = {};
 
   constructor(
@@ -83,23 +80,7 @@ export class FfxivPrometheusService {
   }
 
   private async getFfxivWorlds(): Promise<FfxivWorld[]> {
-    const now = Date.now();
-
-    const diff = now - this.ffxivWorldsUpdatedAt;
-    if (diff >= this.ffxivWorldsTtlMilliseconds) {
-      this.ffxivWorldsUpdatedAt = now;
-      this.ffxivWorlds = this.ffxivService.getAllWorlds().catch(() => {
-        // TODO: Log error.
-
-        // On error, reset timestamp to zero to force update next time the
-        // function is called.
-        this.ffxivWorldsUpdatedAt = 0;
-
-        return [];
-      });
-    }
-
-    return await this.ffxivWorlds;
+    return this.ffxivService.getAllWorlds();
   }
 
   private createGauge(
