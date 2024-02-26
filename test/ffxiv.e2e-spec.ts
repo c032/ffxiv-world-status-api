@@ -1,14 +1,15 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
+import PgPool from "pg-pool";
 
-import { Pool } from "../src/database/types/pool";
+import { DbConnectionService } from "../src/database/dbconnection.service";
 
-import { FfxivModule } from "./../src/ffxiv/ffxiv.module";
+import { FfxivModule } from "../src/ffxiv/ffxiv.module";
 
 describe("FfxivController (e2e)", () => {
   let app: INestApplication;
-  let pool: Pool;
+  let pool: PgPool<DbConnectionService>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

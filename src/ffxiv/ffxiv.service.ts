@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { PgClientService } from "../database/pgclient.service";
+import { DbConnectionService } from "../database/dbconnection.service";
 
 import { toFfxivWorld } from "./ffxiv.mapper";
 
@@ -12,56 +12,48 @@ import { getWorldQuery } from "./queries/get-world.query";
 
 @Injectable()
 export class FfxivService {
-  constructor(private readonly pgClientService: PgClientService) {}
+  constructor(private readonly db: DbConnectionService) {}
 
   public async getAllWorlds(): Promise<FfxivWorld[]> {
-    return this.pgClientService.withClient<FfxivWorld[]>(async (client) => {
-      const worldsDto = await getAllWorldsQuery.run({}, client);
+    const worldsDto = await getAllWorldsQuery.run({}, this.db);
 
-      const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
+    const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
-      return worlds;
-    });
+    return worlds;
   }
 
   public async getWorldGroup(worldGroupName: string): Promise<FfxivWorld[]> {
-    return this.pgClientService.withClient<FfxivWorld[]>(async (client) => {
-      const worldsDto = await getWorldGroupQuery.run(
-        {
-          groupName: worldGroupName,
-        },
-        client,
-      );
+    const worldsDto = await getWorldGroupQuery.run(
+      {
+        groupName: worldGroupName,
+      },
+      this.db,
+    );
 
-      const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
+    const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
-      return worlds;
-    });
+    return worlds;
   }
 
   public async getWorld(
     worldGroupName: string,
     worldName: string,
   ): Promise<FfxivWorld | null> {
-    return this.pgClientService.withClient<FfxivWorld | null>(
-      async (client) => {
-        const worldsDto = await getWorldQuery.run(
-          {
-            groupName: worldGroupName,
-            worldName: worldName,
-          },
-          client,
-        );
-
-        const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
-
-        const world = worlds[0];
-        if (!world) {
-          return null;
-        }
-
-        return world;
+    const worldsDto = await getWorldQuery.run(
+      {
+        groupName: worldGroupName,
+        worldName: worldName,
       },
+      this.db,
     );
+
+    const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
+
+    const world = worlds[0];
+    if (!world) {
+      return null;
+    }
+
+    return world;
   }
 }
