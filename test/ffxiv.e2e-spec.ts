@@ -7,6 +7,8 @@ import { DbConnectionService } from "../src/database/dbconnection.service";
 
 import { FfxivModule } from "../src/ffxiv/ffxiv.module";
 
+// TODO: Add data to database for tests.
+
 describe("FfxivController (e2e)", () => {
   let app: INestApplication;
   let pool: PgPool<DbConnectionService>;
