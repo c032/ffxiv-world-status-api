@@ -6,7 +6,8 @@ services:
       context: "."
       dockerfile: "Dockerfile-e2e"
     depends_on:
-      - "postgresql"
+      postgresql:
+        condition: "service_healthy"
     environment:
       - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/api.c032.dev/postgresql_connection_string_test"
       - "PORT=8000"
@@ -16,12 +17,23 @@ services:
       - "./docker/postgresql_connection_string_test:/usr/local/etc/api.c032.dev/postgresql_connection_string_test"
 
   postgresql:
+    build:
+      context: "."
+      dockerfile: "./docker/postgresql.dockerfile"
     environment:
+      - "PGDATA=/var/lib/postgresql/data/pgdata"
       - "POSTGRES_DB=test_api_e2e"
       - "POSTGRES_HOST_AUTH_METHOD=scram-sha-256"
       - "POSTGRES_INITDB_ARGS=--no-locale --data-checksums --auth-host=scram-sha-256"
       - "POSTGRES_PASSWORD=correct horse battery staple"
       - "POSTGRES_USER=test_api_e2e"
-    image: "postgres:16.1-alpine3.19"
+    healthcheck:
+      interval: "5s"
+      retries: "5"
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      timeout: "5s"
     volumes:
-      - "./migrations:/docker-entrypoint-initdb.d"
+      - "postgresql_data_test:/var/lib/postgresql/data/pgdata"
+
+volumes:
+  postgresql_data_test:

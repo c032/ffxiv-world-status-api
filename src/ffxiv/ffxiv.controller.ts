@@ -49,6 +49,9 @@ export class FfxivController {
     @Param("worldgroup") worldGroupName: string,
   ): Promise<FfxivWorldsResponseDto> {
     const worldGroup = await this.ffxivService.getWorldGroup(worldGroupName);
+    if (worldGroup.length === 0) {
+      throw new NotFoundException(`No worlds for ${worldGroupName}`);
+    }
     return toFfxivWorldsResponseDto(worldGroup);
   }
 

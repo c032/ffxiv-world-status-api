@@ -7,7 +7,9 @@ import { DbConnectionService } from "../src/database/dbconnection.service";
 
 import { FfxivModule } from "../src/ffxiv/ffxiv.module";
 
-// TODO: Add data to database for tests.
+import allWorlds from "./fixtures/ffxiv/all-worlds.fixture";
+import worldGroupAether from "./fixtures/ffxiv/worldgroup-aether.fixture";
+import worldAetherCactuar from "./fixtures/ffxiv/world-aether-cactuar.fixture";
 
 describe("FfxivController (e2e)", () => {
   let app: INestApplication;
@@ -30,27 +32,45 @@ describe("FfxivController (e2e)", () => {
   });
 
   describe("GET /ffxiv/worlds", () => {
-    it("returns no worlds if the database is empty", () => {
+    it.todo("returns no worlds if the database is empty");
+
+    it("returns all worlds", () => {
       return request(app.getHttpServer())
         .get("/ffxiv/worlds")
         .expect(200)
-        .expect({ worlds: [] });
+        .expect({ worlds: allWorlds });
     });
-
-    it.todo("returns all worlds");
 
     it.todo("returns only the most recent batch");
   });
 
   describe("GET /ffxiv/worlds/:worldgroup", () => {
-    it.todo("returns only worlds from the given group");
+    it("returns only worlds from the given group", () => {
+      return request(app.getHttpServer())
+        .get("/ffxiv/worlds/aether")
+        .expect(200)
+        .expect({ worlds: worldGroupAether });
+    });
   });
 
   describe("GET /ffxiv/worlds/:worldgroup/:worldname", () => {
-    it.todo("returns only the specific world");
+    it("returns only the specific world", () => {
+      return request(app.getHttpServer())
+        .get("/ffxiv/worlds/aether/cactuar")
+        .expect(200)
+        .expect({ world: worldAetherCactuar });
+    });
 
-    it.todo("returns 404 if `:worldgroup` is invalid");
+    it("returns 404 if `:worldgroup` is invalid", () => {
+      return request(app.getHttpServer())
+        .get("/ffxiv/worlds/probablynonexistent")
+        .expect(404);
+    });
 
-    it.todo("returns 404 if `:worldname` is invalid");
+    it("returns 404 if `:worldname` is invalid", () => {
+      return request(app.getHttpServer())
+        .get("/ffxiv/worlds/aether/probablynonexistent")
+        .expect(404);
+    });
   });
 });
