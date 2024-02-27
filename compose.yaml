@@ -6,7 +6,8 @@ services:
       context: "."
       dockerfile: "./docker/api-development.dockerfile"
     depends_on:
-      - "postgresql"
+      postgresql:
+        condition: "service_healthy"
     environment:
       - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/api.c032.dev/postgresql_connection_string_development"
       - "PORT=8000"
@@ -25,6 +26,11 @@ services:
       - "POSTGRES_INITDB_ARGS=--no-locale --data-checksums --auth-host=scram-sha-256"
       - "POSTGRES_PASSWORD=correct horse battery staple"
       - "POSTGRES_USER=development_website"
+    healthcheck:
+      interval: "5s"
+      retries: "5"
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      timeout: "5s"
     image: "postgres:16.1-alpine3.19"
     volumes:
       - "./migrations:/docker-entrypoint-initdb.d"
