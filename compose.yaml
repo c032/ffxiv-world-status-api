@@ -1,8 +1,10 @@
 version: "3.8"
 
 services:
-  api:
-    build: "."
+  api-development:
+    build:
+      context: "."
+      dockerfile: "./docker/api-development.dockerfile"
     depends_on:
       - "postgresql"
     environment:
@@ -26,7 +28,7 @@ services:
     image: "postgres:16.1-alpine3.19"
     volumes:
       - "./migrations:/docker-entrypoint-initdb.d"
-      - "postgresql_data:/var/lib/postgresql/data/pgdata"
+      - "postgresql_data_development:/var/lib/postgresql/data/pgdata"
 
 volumes:
-  postgresql_data:
+  postgresql_data_development:

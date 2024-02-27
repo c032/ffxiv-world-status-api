@@ -4,7 +4,7 @@ services:
   api-e2e:
     build:
       context: "."
-      dockerfile: "Dockerfile-e2e"
+      dockerfile: "./docker/e2e-tests.dockerfile"
     depends_on:
       postgresql:
         condition: "service_healthy"
