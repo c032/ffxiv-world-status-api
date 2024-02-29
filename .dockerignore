@@ -1,2 +1,12 @@
+.dockerignore
+Dockerfile
+
+.git
+.gitignore
+
+.npmrc
+node_modules
+npm-debug.log
+
 build
 dist
