@@ -1,5 +1,7 @@
 FROM node:lts-alpine
 
+RUN apk add dumb-init
+
 USER node
 
 COPY --chown=node:node ./ /home/node/app/
@@ -12,4 +14,4 @@ RUN \
 
 RUN npm run build
 
-CMD ["npm", "run", "test:e2e:docker"]
+CMD ["dumb-init", "npm", "run", "test:e2e:docker"]

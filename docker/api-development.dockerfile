@@ -1,5 +1,7 @@
 FROM node:lts-alpine
 
+RUN apk add dumb-init
+
 USER node
 
 COPY --chown=node:node ./ /home/node/app/
@@ -14,4 +16,4 @@ RUN npm run build
 
 EXPOSE 8000/tcp
 
-CMD ["npm", "run", "start:prod"]
+CMD ["dumb-init", "npm", "run", "start:prod"]
