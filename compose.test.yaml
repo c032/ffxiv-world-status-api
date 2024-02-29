@@ -33,7 +33,5 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       timeout: "5s"
     volumes:
-      - "postgresql_data_test:/var/lib/postgresql/data/pgdata"
-
-volumes:
-  postgresql_data_test:
+      - type: "tmpfs"
+        target: "/var/lib/postgresql/data/pgdata"
