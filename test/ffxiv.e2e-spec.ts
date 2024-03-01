@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import PgPool from "pg-pool";
+import { CacheModule } from "@nestjs/cache-manager";
 
 import { DbConnectionService } from "../src/database/dbconnection.service";
 
@@ -17,7 +18,12 @@ describe("FfxivController (e2e)", () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [FfxivModule],
+      imports: [
+        CacheModule.register({
+          isGlobal: true,
+        }),
+        FfxivModule,
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();

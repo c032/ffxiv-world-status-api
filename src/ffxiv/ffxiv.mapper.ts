@@ -1,3 +1,5 @@
+import { isObject, asString, asBoolean } from "../lib/narrowing";
+
 import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
 
 import { FfxivWorldDto } from "./dto/ffxiv-world.dto";
@@ -87,6 +89,22 @@ export function toFfxivWorld(
     category: toServerCategory(row.world_category),
     serverStatus: toServerStatus(row.world_status),
     canCreateNewCharacters: row.can_create_new_characters,
+  };
+
+  return ffxivWorld;
+}
+
+export function asFfxivWorld(input: unknown): FfxivWorld {
+  if (!isObject(input)) {
+    throw new Error("input is not an object");
+  }
+
+  const ffxivWorld: FfxivWorld = {
+    group: asString(input.group),
+    name: asString(input.name),
+    category: toServerCategory(asString(input.category)),
+    serverStatus: toServerStatus(asString(input.serverStatus)),
+    canCreateNewCharacters: asBoolean(input.canCreateNewCharacters),
   };
 
   return ffxivWorld;
