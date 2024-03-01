@@ -47,7 +47,13 @@ describe("FfxivController", () => {
 
       const result: string = await ffxivController.getPrometheus();
 
-      expect(result).toBe("\n");
+      expect(result).toEqual(
+        [
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          "",
+        ].join("\n"),
+      );
     });
 
     it("sets gauge value to `1` for online servers", async () => {
@@ -69,9 +75,9 @@ describe("FfxivController", () => {
 
       expect(result).toEqual(
         [
-          "# HELP chaos_omega_online Omega (Chaos) server online status.",
-          "# TYPE chaos_omega_online gauge",
-          "chaos_omega_online 1",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
           "",
         ].join("\n"),
       );
@@ -96,9 +102,9 @@ describe("FfxivController", () => {
 
       expect(result).toEqual(
         [
-          "# HELP chaos_omega_online Omega (Chaos) server online status.",
-          "# TYPE chaos_omega_online gauge",
-          "chaos_omega_online 0",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
           "",
         ].join("\n"),
       );
@@ -123,9 +129,9 @@ describe("FfxivController", () => {
 
       expect(result).toEqual(
         [
-          "# HELP chaos_omega_online Omega (Chaos) server online status.",
-          "# TYPE chaos_omega_online gauge",
-          "chaos_omega_online 0",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
           "",
         ].join("\n"),
       );
@@ -135,7 +141,7 @@ describe("FfxivController", () => {
       jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
         Promise.resolve(
           [
-            { group: "Non-existent group", name: "Non-existent name" },
+            { group: "Example group name", name: "Example world name" },
             { group: "Chaos", name: "Omega" },
           ].map((world) => ({
             group: world.group,
@@ -153,13 +159,10 @@ describe("FfxivController", () => {
 
       expect(result).toEqual(
         [
-          "# HELP non_existent_group_non_existent_name_online Non-existent name (Non-existent group) server online status.",
-          "# TYPE non_existent_group_non_existent_name_online gauge",
-          "non_existent_group_non_existent_name_online 1",
-          "",
-          "# HELP chaos_omega_online Omega (Chaos) server online status.",
-          "# TYPE chaos_omega_online gauge",
-          "chaos_omega_online 1",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Example group name",ffxiv_world="Example world name"} 1`,
+          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
           "",
         ].join("\n"),
       );
@@ -213,22 +216,19 @@ describe("FfxivController", () => {
 
       expect(firstResult).toEqual(
         [
-          "# HELP light_alpha_online Alpha (Light) server online status.",
-          "# TYPE light_alpha_online gauge",
-          "light_alpha_online 1",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
           "",
         ].join("\n"),
       );
 
       expect(secondResult).toEqual(
         [
-          "# HELP light_alpha_online Alpha (Light) server online status.",
-          "# TYPE light_alpha_online gauge",
-          "light_alpha_online 1",
-          "",
-          "# HELP chaos_cerberus_online Cerberus (Chaos) server online status.",
-          "# TYPE chaos_cerberus_online gauge",
-          "chaos_cerberus_online 1",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
+          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Cerberus"} 1`,
           "",
         ].join("\n"),
       );
@@ -278,82 +278,19 @@ describe("FfxivController", () => {
 
       expect(firstResult).toEqual(
         [
-          "# HELP light_alpha_online Alpha (Light) server online status.",
-          "# TYPE light_alpha_online gauge",
-          "light_alpha_online 1",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
           "",
         ].join("\n"),
       );
 
       expect(secondResult).toEqual(
         [
-          "# HELP light_alpha_online Alpha (Light) server online status.",
-          "# TYPE light_alpha_online gauge",
-          "light_alpha_online 1",
-          "",
-          "# HELP light_lich_online Lich (Light) server online status.",
-          "# TYPE light_lich_online gauge",
-          "light_lich_online 1",
-          "",
-        ].join("\n"),
-      );
-    });
-
-    // TODO: Should I actually delete the metric?
-    it("set world status to -1 if there's no data", async () => {
-      jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
-        Promise.resolve([
-          {
-            group: "Light",
-            name: "Alpha",
-            serverStatus: ServerStatus.Online,
-
-            // Not required for the test.
-            category: ServerCategory.Standard,
-            canCreateNewCharacters: false,
-          },
-          {
-            group: "Light",
-            name: "Lich",
-            serverStatus: ServerStatus.Online,
-
-            // Not required for the test.
-            category: ServerCategory.Standard,
-            canCreateNewCharacters: false,
-          },
-        ]),
-      );
-
-      const firstResult: string = await ffxivController.getPrometheus();
-
-      jest
-        .spyOn(ffxivService, "getAllWorlds")
-        .mockImplementation(() => Promise.resolve([]));
-
-      const secondResult: string = await ffxivController.getPrometheus();
-
-      expect(firstResult).toEqual(
-        [
-          "# HELP light_alpha_online Alpha (Light) server online status.",
-          "# TYPE light_alpha_online gauge",
-          "light_alpha_online 1",
-          "",
-          "# HELP light_lich_online Lich (Light) server online status.",
-          "# TYPE light_lich_online gauge",
-          "light_lich_online 1",
-          "",
-        ].join("\n"),
-      );
-
-      expect(secondResult).toEqual(
-        [
-          "# HELP light_alpha_online Alpha (Light) server online status.",
-          "# TYPE light_alpha_online gauge",
-          "light_alpha_online -1",
-          "",
-          "# HELP light_lich_online Lich (Light) server online status.",
-          "# TYPE light_lich_online gauge",
-          "light_lich_online -1",
+          "# HELP ffxiv_server_online_status FFXIV server online status.",
+          "# TYPE ffxiv_server_online_status gauge",
+          `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
+          `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Lich"} 1`,
           "",
         ].join("\n"),
       );
