@@ -52,6 +52,9 @@ describe("FfxivController", () => {
           "# HELP ffxiv_server_online_status FFXIV server online status.",
           "# TYPE ffxiv_server_online_status gauge",
           "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          "",
         ].join("\n"),
       );
     });
@@ -78,6 +81,10 @@ describe("FfxivController", () => {
           "# HELP ffxiv_server_online_status FFXIV server online status.",
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
+          "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
           "",
         ].join("\n"),
       );
@@ -106,6 +113,10 @@ describe("FfxivController", () => {
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
           "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+          "",
         ].join("\n"),
       );
     });
@@ -132,6 +143,10 @@ describe("FfxivController", () => {
           "# HELP ffxiv_server_online_status FFXIV server online status.",
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+          "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
           "",
         ].join("\n"),
       );
@@ -163,6 +178,11 @@ describe("FfxivController", () => {
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Example group name",ffxiv_world="Example world name"} 1`,
           `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
+          "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Example group name",ffxiv_world="Example world name"} 0`,
+          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
           "",
         ].join("\n"),
       );
@@ -220,6 +240,10 @@ describe("FfxivController", () => {
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
           "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Light",ffxiv_world="Alpha"} 0`,
+          "",
         ].join("\n"),
       );
 
@@ -229,6 +253,11 @@ describe("FfxivController", () => {
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
           `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Cerberus"} 1`,
+          "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Light",ffxiv_world="Alpha"} 0`,
+          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Cerberus"} 0`,
           "",
         ].join("\n"),
       );
@@ -282,6 +311,10 @@ describe("FfxivController", () => {
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
           "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Light",ffxiv_world="Alpha"} 0`,
+          "",
         ].join("\n"),
       );
 
@@ -291,6 +324,11 @@ describe("FfxivController", () => {
           "# TYPE ffxiv_server_online_status gauge",
           `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Alpha"} 1`,
           `ffxiv_server_online_status{ffxiv_group="Light",ffxiv_world="Lich"} 1`,
+          "",
+          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+          "# TYPE ffxiv_server_character_creation_available gauge",
+          `ffxiv_server_character_creation_available{ffxiv_group="Light",ffxiv_world="Alpha"} 0`,
+          `ffxiv_server_character_creation_available{ffxiv_group="Light",ffxiv_world="Lich"} 0`,
           "",
         ].join("\n"),
       );

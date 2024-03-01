@@ -31,7 +31,7 @@ export class FfxivPrometheusService {
     return await this.registry.metrics();
   }
 
-  private collectFfxivWorlds(): CollectFunction<Gauge> {
+  private collectFfxivWorldOnlineStatus(): CollectFunction<Gauge> {
     return async (genericGauge: Gauge) => {
       const allWorlds = await this.getFfxivWorlds();
 
@@ -52,12 +52,40 @@ export class FfxivPrometheusService {
     };
   }
 
+  private collectFfxivWorldCharacterCreationAvailability(): CollectFunction<Gauge> {
+    return async (genericGauge: Gauge) => {
+      const allWorlds = await this.getFfxivWorlds();
+
+      allWorlds.forEach((world) => {
+        const g = genericGauge.labels({
+          [PrometheusLabels.FfxivGroup]: world.group,
+          [PrometheusLabels.FfxivWorld]: world.name,
+        });
+
+        const canCreateNewCharacters = world.canCreateNewCharacters;
+
+        if (canCreateNewCharacters) {
+          g.set(1);
+        } else {
+          g.set(0);
+        }
+      });
+    };
+  }
+
   private async updateMetrics() {
     this.createGauge(
       "ffxiv_server_online_status",
       "FFXIV server online status.",
       [PrometheusLabels.FfxivGroup, PrometheusLabels.FfxivWorld] as const,
-      this.collectFfxivWorlds(),
+      this.collectFfxivWorldOnlineStatus(),
+    );
+
+    this.createGauge(
+      "ffxiv_server_character_creation_available",
+      "FFXIV character creation available.",
+      [PrometheusLabels.FfxivGroup, PrometheusLabels.FfxivWorld] as const,
+      this.collectFfxivWorldCharacterCreationAvailability(),
     );
   }
 
