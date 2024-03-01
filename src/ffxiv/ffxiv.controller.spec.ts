@@ -59,99 +59,6 @@ describe("FfxivController", () => {
       );
     });
 
-    it("sets gauge value to `1` for online servers", async () => {
-      jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
-        Promise.resolve([
-          {
-            group: "Chaos",
-            name: "Omega",
-            serverStatus: ServerStatus.Online,
-
-            // Not required for the test.
-            category: ServerCategory.Standard,
-            canCreateNewCharacters: false,
-          },
-        ]),
-      );
-
-      const result: string = await ffxivController.getPrometheus();
-
-      expect(result).toEqual(
-        [
-          "# HELP ffxiv_server_online_status FFXIV server online status.",
-          "# TYPE ffxiv_server_online_status gauge",
-          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
-          "",
-          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
-          "# TYPE ffxiv_server_character_creation_available gauge",
-          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
-          "",
-        ].join("\n"),
-      );
-    });
-
-    it("sets gauge value to `0` for servers in maintenance", async () => {
-      jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
-        Promise.resolve([
-          {
-            group: "Chaos",
-            name: "Omega",
-            serverStatus: ServerStatus.Maintenance,
-
-            // Not required for the test.
-            category: ServerCategory.Standard,
-            canCreateNewCharacters: false,
-          },
-        ]),
-      );
-
-      const result: string = await ffxivController.getPrometheus();
-
-      expect(result).toEqual(
-        [
-          "# HELP ffxiv_server_online_status FFXIV server online status.",
-          "# TYPE ffxiv_server_online_status gauge",
-          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
-          "",
-          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
-          "# TYPE ffxiv_server_character_creation_available gauge",
-          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
-          "",
-        ].join("\n"),
-      );
-    });
-
-    it("sets gauge value to `0` for servers in partial maintenance", async () => {
-      jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
-        Promise.resolve([
-          {
-            group: "Chaos",
-            name: "Omega",
-            serverStatus: ServerStatus.PartialMaintenance,
-
-            // Not required for the test.
-            category: ServerCategory.Standard,
-            canCreateNewCharacters: false,
-          },
-        ]),
-      );
-
-      const result: string = await ffxivController.getPrometheus();
-
-      expect(result).toEqual(
-        [
-          "# HELP ffxiv_server_online_status FFXIV server online status.",
-          "# TYPE ffxiv_server_online_status gauge",
-          `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
-          "",
-          "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
-          "# TYPE ffxiv_server_character_creation_available gauge",
-          `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
-          "",
-        ].join("\n"),
-      );
-    });
-
     it("includes information about all known worlds", async () => {
       jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
         Promise.resolve(
@@ -332,6 +239,101 @@ describe("FfxivController", () => {
           "",
         ].join("\n"),
       );
+    });
+
+    describe("metric `ffxiv_server_online_status`", () => {
+      it("sets gauge value to `1` for online servers", async () => {
+        jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
+          Promise.resolve([
+            {
+              group: "Chaos",
+              name: "Omega",
+              serverStatus: ServerStatus.Online,
+
+              // Not required for the test.
+              category: ServerCategory.Standard,
+              canCreateNewCharacters: false,
+            },
+          ]),
+        );
+
+        const result: string = await ffxivController.getPrometheus();
+
+        expect(result).toEqual(
+          [
+            "# HELP ffxiv_server_online_status FFXIV server online status.",
+            "# TYPE ffxiv_server_online_status gauge",
+            `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
+            "",
+            "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+            "# TYPE ffxiv_server_character_creation_available gauge",
+            `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+            "",
+          ].join("\n"),
+        );
+      });
+
+      it("sets gauge value to `0` for servers in maintenance", async () => {
+        jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
+          Promise.resolve([
+            {
+              group: "Chaos",
+              name: "Omega",
+              serverStatus: ServerStatus.Maintenance,
+
+              // Not required for the test.
+              category: ServerCategory.Standard,
+              canCreateNewCharacters: false,
+            },
+          ]),
+        );
+
+        const result: string = await ffxivController.getPrometheus();
+
+        expect(result).toEqual(
+          [
+            "# HELP ffxiv_server_online_status FFXIV server online status.",
+            "# TYPE ffxiv_server_online_status gauge",
+            `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+            "",
+            "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+            "# TYPE ffxiv_server_character_creation_available gauge",
+            `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+            "",
+          ].join("\n"),
+        );
+      });
+
+      it("sets gauge value to `0` for servers in partial maintenance", async () => {
+        jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
+          Promise.resolve([
+            {
+              group: "Chaos",
+              name: "Omega",
+              serverStatus: ServerStatus.PartialMaintenance,
+
+              // Not required for the test.
+              category: ServerCategory.Standard,
+              canCreateNewCharacters: false,
+            },
+          ]),
+        );
+
+        const result: string = await ffxivController.getPrometheus();
+
+        expect(result).toEqual(
+          [
+            "# HELP ffxiv_server_online_status FFXIV server online status.",
+            "# TYPE ffxiv_server_online_status gauge",
+            `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+            "",
+            "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+            "# TYPE ffxiv_server_character_creation_available gauge",
+            `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+            "",
+          ].join("\n"),
+        );
+      });
     });
   });
 });
