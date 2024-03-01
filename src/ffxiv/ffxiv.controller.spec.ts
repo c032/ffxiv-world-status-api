@@ -335,5 +335,69 @@ describe("FfxivController", () => {
         );
       });
     });
+
+    describe("metric `ffxiv_server_character_creation_available`", () => {
+      it("sets gauge value to `1` when character creation is available", async () => {
+        jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
+          Promise.resolve([
+            {
+              group: "Chaos",
+              name: "Omega",
+              canCreateNewCharacters: true,
+
+              // Not required for the test.
+              category: ServerCategory.Standard,
+              serverStatus: ServerStatus.Online,
+            },
+          ]),
+        );
+
+        const result: string = await ffxivController.getPrometheus();
+
+        expect(result).toEqual(
+          [
+            "# HELP ffxiv_server_online_status FFXIV server online status.",
+            "# TYPE ffxiv_server_online_status gauge",
+            `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
+            "",
+            "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+            "# TYPE ffxiv_server_character_creation_available gauge",
+            `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
+            "",
+          ].join("\n"),
+        );
+      });
+
+      it("sets gauge value to `0` when character creation is not available", async () => {
+        jest.spyOn(ffxivService, "getAllWorlds").mockImplementation(() =>
+          Promise.resolve([
+            {
+              group: "Chaos",
+              name: "Omega",
+              canCreateNewCharacters: false,
+
+              // Not required for the test.
+              category: ServerCategory.Standard,
+              serverStatus: ServerStatus.Online,
+            },
+          ]),
+        );
+
+        const result: string = await ffxivController.getPrometheus();
+
+        expect(result).toEqual(
+          [
+            "# HELP ffxiv_server_online_status FFXIV server online status.",
+            "# TYPE ffxiv_server_online_status gauge",
+            `ffxiv_server_online_status{ffxiv_group="Chaos",ffxiv_world="Omega"} 1`,
+            "",
+            "# HELP ffxiv_server_character_creation_available FFXIV character creation available.",
+            "# TYPE ffxiv_server_character_creation_available gauge",
+            `ffxiv_server_character_creation_available{ffxiv_group="Chaos",ffxiv_world="Omega"} 0`,
+            "",
+          ].join("\n"),
+        );
+      });
+    });
   });
 });
