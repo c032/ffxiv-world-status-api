@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { Registry, Gauge } from "prom-client";
+import { Registry, Gauge, Metric } from "prom-client";
 
 import { FfxivService } from "./ffxiv.service";
 
@@ -13,8 +13,6 @@ interface CollectFunction<T> {
 
 @Injectable()
 export class FfxivPrometheusService {
-  private readonly gauges: Record<string, Gauge | undefined> = {};
-
   constructor(
     @Inject("FfxivPrometheusRegistry") private readonly registry: Registry,
     private readonly ffxivService: FfxivService,
@@ -94,9 +92,14 @@ export class FfxivPrometheusService {
     labels: PrometheusLabels[],
     collect: CollectFunction<Gauge>,
   ): Gauge {
-    const existingGauge = this.gauges[name];
-    if (existingGauge) {
-      return existingGauge;
+    const existingMetric: Metric<string> | undefined =
+      this.registry.getSingleMetric(name);
+    if (existingMetric) {
+      if (existingMetric instanceof Gauge) {
+        return existingMetric;
+      } else {
+        throw new Error(`Existing metric is not a gauge: ${name}`);
+      }
     }
 
     const gauge = new Gauge({
@@ -108,8 +111,6 @@ export class FfxivPrometheusService {
         await collect(gauge);
       },
     });
-
-    this.gauges[name] = gauge;
 
     return gauge;
   }
