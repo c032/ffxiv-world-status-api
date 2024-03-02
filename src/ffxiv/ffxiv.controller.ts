@@ -23,7 +23,7 @@ export class FfxivController {
     private readonly ffxivPrometheusService: FfxivPrometheusService,
   ) {}
 
-  @Get("/prometheus")
+  @Get("/metrics")
   @Header("Content-Type", "text/plain")
   public async getPrometheus(): Promise<string> {
     const metrics: string = await this.ffxivPrometheusService.getMetrics();

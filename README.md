@@ -6,13 +6,9 @@
 
 #### Prometheus
 
-##### `GET /ffxiv/prometheus`
+##### `GET /ffxiv/metrics`
 
 Returns information about FFXIV servers in Prometheus format.
-
-> Note: Only one world is being returned currently, so it's not really
-> that useful at this moment. I will remove this notice when I include
-> more data in the response.
 
 #### JSON
 
