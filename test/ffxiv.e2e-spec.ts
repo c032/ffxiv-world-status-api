@@ -1,10 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
+import * as pg from "pg";
 import PgPool from "pg-pool";
 import { CacheModule } from "@nestjs/cache-manager";
-
-import { DbConnectionService } from "../src/database/dbconnection.service";
 
 import { FfxivModule } from "../src/ffxiv/ffxiv.module";
 
@@ -14,7 +13,7 @@ import worldAetherCactuar from "./fixtures/ffxiv/world-aether-cactuar.fixture";
 
 describe("FfxivController (e2e)", () => {
   let app: INestApplication;
-  let pool: PgPool<DbConnectionService>;
+  let pool: PgPool<pg.Client>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

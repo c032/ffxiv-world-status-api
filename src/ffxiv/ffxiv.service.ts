@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 
-import { DbConnectionService } from "../database/dbconnection.service";
+import { PgPoolService } from "../database/pg-pool.service";
 import { isArray } from "../lib/narrowing";
 
 import { toFfxivWorld, asFfxivWorld } from "./ffxiv.mapper";
@@ -16,7 +16,7 @@ import { getWorldQuery } from "./queries/get-world.query";
 @Injectable()
 export class FfxivService {
   constructor(
-    private readonly db: DbConnectionService,
+    private readonly pool: PgPoolService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
@@ -36,14 +36,16 @@ export class FfxivService {
       return worldsFromCache;
     }
 
-    const worldsDto = await getAllWorldsQuery.run({}, this.db);
+    return this.pool.useClient(async (client) => {
+      const worldsDto = await getAllWorldsQuery.run({}, client);
 
-    const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
+      const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
-    // TODO: Remove this when the "get from cache" functionality is extracted.
-    this.cacheManager.set(cacheKey, worlds, ttl);
+      // TODO: Remove this when the "get from cache" functionality is extracted.
+      this.cacheManager.set(cacheKey, worlds, ttl);
 
-    return worlds;
+      return worlds;
+    });
   }
 
   private async getAllWorldsFromCache(
@@ -71,37 +73,41 @@ export class FfxivService {
   }
 
   public async getWorldGroup(worldGroupName: string): Promise<FfxivWorld[]> {
-    const worldsDto = await getWorldGroupQuery.run(
-      {
-        groupName: worldGroupName,
-      },
-      this.db,
-    );
+    return this.pool.useClient(async (client) => {
+      const worldsDto = await getWorldGroupQuery.run(
+        {
+          groupName: worldGroupName,
+        },
+        client,
+      );
 
-    const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
+      const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
-    return worlds;
+      return worlds;
+    });
   }
 
   public async getWorld(
     worldGroupName: string,
     worldName: string,
   ): Promise<FfxivWorld | null> {
-    const worldsDto = await getWorldQuery.run(
-      {
-        groupName: worldGroupName,
-        worldName: worldName,
-      },
-      this.db,
-    );
+    return this.pool.useClient(async (client) => {
+      const worldsDto = await getWorldQuery.run(
+        {
+          groupName: worldGroupName,
+          worldName: worldName,
+        },
+        client,
+      );
 
-    const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
+      const worlds: FfxivWorld[] = worldsDto.map((row) => toFfxivWorld(row));
 
-    const world = worlds[0];
-    if (!world) {
-      return null;
-    }
+      const world = worlds[0];
+      if (!world) {
+        return null;
+      }
 
-    return world;
+      return world;
+    });
   }
 }

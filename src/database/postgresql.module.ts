@@ -1,12 +1,10 @@
-import { Module, Scope } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
+import { Module } from "@nestjs/common";
 import * as PgPool from "pg-pool";
-import { Request } from "express";
 
 import { ConfigModule } from "../config/config.module";
 import { ConfigService } from "../config/config.service";
 
-import { DbConnectionService } from "./dbconnection.service";
+import { PgPoolService } from "./pg-pool.service";
 
 @Module({
   imports: [ConfigModule],
@@ -16,32 +14,13 @@ import { DbConnectionService } from "./dbconnection.service";
       provide: "PG_POOL",
       inject: [ConfigService],
       useFactory: (config: ConfigService) =>
-        new PgPool<DbConnectionService>({
+        new PgPool({
           connectionString: config.postgresqlConnectionString,
         }),
     },
-    {
-      // https://github.com/nestjs/nest/issues/9497#issuecomment-1128787651
-
-      provide: DbConnectionService,
-      scope: Scope.REQUEST,
-      inject: ["PG_POOL", REQUEST],
-      useFactory: async (pool: PgPool<DbConnectionService>, req: Request) => {
-        const { res } = req;
-        if (!res) {
-          throw new Error("Unable to get response object.");
-        }
-
-        const client = await pool.connect();
-        res.on("finish", () => {
-          client.release();
-        });
-
-        return client;
-      },
-    },
+    PgPoolService,
   ],
-  exports: [DbConnectionService],
+  exports: [PgPoolService],
 })
 export class PostgresqlModule {
   // I could call this "DbModule" or something generic like that, but that
