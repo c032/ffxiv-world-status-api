@@ -13,11 +13,6 @@ interface CollectFunction<T> {
 
 @Injectable()
 export class FfxivPrometheusService {
-  private ffxivWorlds: Promise<FfxivWorld[]> = Promise.resolve<FfxivWorld[]>(
-    [],
-  );
-  private ffxivWorldsUpdatedAt: number = 0;
-
   private readonly gauges: Record<string, Gauge | undefined> = {};
 
   constructor(
@@ -117,20 +112,5 @@ export class FfxivPrometheusService {
     this.gauges[name] = gauge;
 
     return gauge;
-  }
-
-  private ffxivWorldToMetricName(
-    worldGroup: string,
-    worldName: string,
-  ): string {
-    return `${this.toSnakeCase(worldGroup)}_${this.toSnakeCase(worldName)}_online`;
-  }
-
-  // TODO: Extract to separate file.
-  private toSnakeCase(input: string): string {
-    return input
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "_")
-      .replace(/_+/g, "_");
   }
 }

@@ -16,8 +16,6 @@ import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
 import { FfxivWorldsResponseDto } from "./dto/ffxiv-worlds-response.dto";
 import { FfxivWorldResponseDto } from "./dto/ffxiv-world-response.dto";
 
-// TODO: Add caching.
-
 @Controller("ffxiv")
 export class FfxivController {
   constructor(
