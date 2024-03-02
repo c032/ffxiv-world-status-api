@@ -15,7 +15,9 @@ import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
     FfxivService,
     {
       provide: "FfxivPrometheusRegistry",
-      useClass: PrometheusRegistry,
+      useFactory: () => {
+        return new PrometheusRegistry();
+      },
     },
     FfxivPrometheusService,
   ],
