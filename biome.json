@@ -4,31 +4,8 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": false,
-			"complexity": {
-				"noBannedTypes": "error",
-				"noUselessThisAlias": "error",
-				"noUselessTypeConstraint": "error",
-				"useArrowFunction": "off"
-			},
-			"correctness": {
-				"noPrecisionLoss": "error",
-				"noUnusedVariables": "error",
-				"useArrayLiterals": "off"
-			},
-			"style": {
-				"noNamespace": "error",
-				"useAsConstAssertion": "error",
-				"useBlockStatements": "off"
-			},
-			"suspicious": {
-				"noExplicitAny": "off",
-				"noExtraNonNullAssertion": "error",
-				"noMisleadingInstantiator": "error",
-				"noUnsafeDeclarationMerging": "error"
-			}
-		},
-		"ignore": ["**/.eslintrc.js"]
+			"recommended": true
+		}
 	},
 	"overrides": [
 		{
@@ -49,7 +26,8 @@
 					"style": {
 						"noArguments": "error",
 						"noVar": "error",
-						"useConst": "error"
+						"useConst": "error",
+						"useImportType": "off"
 					},
 					"suspicious": {
 						"noDuplicateClassMembers": "off",

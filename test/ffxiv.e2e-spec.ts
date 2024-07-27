@@ -1,15 +1,15 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { CacheModule } from "@nestjs/cache-manager";
 import { INestApplication } from "@nestjs/common";
-import * as request from "supertest";
+import { Test, TestingModule } from "@nestjs/testing";
 import * as pg from "pg";
 import PgPool from "pg-pool";
-import { CacheModule } from "@nestjs/cache-manager";
+import * as request from "supertest";
 
 import { FfxivModule } from "../src/ffxiv/ffxiv.module";
 
 import allWorlds from "./fixtures/ffxiv/all-worlds.fixture";
-import worldGroupAether from "./fixtures/ffxiv/worldgroup-aether.fixture";
 import worldAetherCactuar from "./fixtures/ffxiv/world-aether-cactuar.fixture";
+import worldGroupAether from "./fixtures/ffxiv/worldgroup-aether.fixture";
 
 describe("FfxivController (e2e)", () => {
 	let app: INestApplication;

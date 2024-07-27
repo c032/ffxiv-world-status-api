@@ -12,7 +12,7 @@ async function bootstrap() {
 	app.enableCors(corsOptions);
 
 	// TODO: Cleanup.
-	const port = parseInt(process.env.PORT || "", 10);
+	const port = Number.parseInt(process.env.PORT || "", 10);
 	if (port.toString() !== process.env.PORT || port === 0) {
 		throw new Error(
 			"Required environment variable `PORT` is missing or invalid.",

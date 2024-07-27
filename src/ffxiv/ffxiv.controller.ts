@@ -1,20 +1,20 @@
 import {
 	Controller,
 	Get,
-	Param,
-	NotFoundException,
 	Header,
+	NotFoundException,
+	Param,
 } from "@nestjs/common";
 
-import { FfxivService } from "./ffxiv.service";
-import {
-	toFfxivWorldsResponseDto,
-	toFfxivWorldResponseDto,
-} from "./ffxiv.mapper";
 import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
+import {
+	toFfxivWorldResponseDto,
+	toFfxivWorldsResponseDto,
+} from "./ffxiv.mapper";
+import { FfxivService } from "./ffxiv.service";
 
-import { FfxivWorldsResponseDto } from "./dto/ffxiv-worlds-response.dto";
 import { FfxivWorldResponseDto } from "./dto/ffxiv-world-response.dto";
+import { FfxivWorldsResponseDto } from "./dto/ffxiv-worlds-response.dto";
 
 @Controller("ffxiv")
 export class FfxivController {

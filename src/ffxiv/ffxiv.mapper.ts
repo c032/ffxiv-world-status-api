@@ -1,9 +1,9 @@
-import { isObject, asString, asBoolean } from "../lib/narrowing";
+import { asBoolean, asString, isObject } from "../lib/narrowing";
 
 import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
 
-import { FfxivWorldDto } from "./dto/ffxiv-world.dto";
 import { FfxivWorldResponseDto } from "./dto/ffxiv-world-response.dto";
+import { FfxivWorldDto } from "./dto/ffxiv-world.dto";
 import { FfxivWorldsResponseDto } from "./dto/ffxiv-worlds-response.dto";
 
 import { ServerCategory } from "./enums/server-category.enum";

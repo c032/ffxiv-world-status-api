@@ -1,11 +1,9 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
-import { Pool } from "./types/pool";
 import { Client } from "./types/client";
+import { Pool } from "./types/pool";
 
-export interface QueryFunction<T> {
-	(client: Client): Promise<T>;
-}
+export type QueryFunction<T> = (client: Client) => Promise<T>;
 
 @Injectable()
 export class PgPoolService {

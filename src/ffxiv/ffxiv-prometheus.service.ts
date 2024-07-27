@@ -1,15 +1,13 @@
-import { Injectable, Inject } from "@nestjs/common";
-import { Registry, Gauge, Metric } from "prom-client";
+import { Inject, Injectable } from "@nestjs/common";
+import { Gauge, Metric, Registry } from "prom-client";
 
 import { FfxivService } from "./ffxiv.service";
 
-import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
-import { ServerStatus } from "./enums/server-status.enum";
 import { PrometheusLabels } from "./enums/prometheus-labels.enum";
+import { ServerStatus } from "./enums/server-status.enum";
+import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
 
-interface CollectFunction<T> {
-	(metric: T): Promise<void>;
-}
+type CollectFunction<T> = (metric: T) => Promise<void>;
 
 @Injectable()
 export class FfxivPrometheusService {
@@ -28,7 +26,7 @@ export class FfxivPrometheusService {
 		return async (genericGauge: Gauge) => {
 			const allWorlds = await this.getFfxivWorlds();
 
-			allWorlds.forEach((world) => {
+			for (const world of allWorlds) {
 				const g = genericGauge.labels({
 					[PrometheusLabels.FfxivGroup]: world.group,
 					[PrometheusLabels.FfxivWorld]: world.name,
@@ -41,7 +39,7 @@ export class FfxivPrometheusService {
 				} else {
 					g.set(0);
 				}
-			});
+			}
 		};
 	}
 
@@ -49,7 +47,7 @@ export class FfxivPrometheusService {
 		return async (genericGauge: Gauge) => {
 			const allWorlds = await this.getFfxivWorlds();
 
-			allWorlds.forEach((world) => {
+			for (const world of allWorlds) {
 				const g = genericGauge.labels({
 					[PrometheusLabels.FfxivGroup]: world.group,
 					[PrometheusLabels.FfxivWorld]: world.name,
@@ -62,7 +60,7 @@ export class FfxivPrometheusService {
 				} else {
 					g.set(0);
 				}
-			});
+			}
 		};
 	}
 
@@ -97,9 +95,9 @@ export class FfxivPrometheusService {
 		if (existingMetric) {
 			if (existingMetric instanceof Gauge) {
 				return existingMetric;
-			} else {
-				throw new Error(`Existing metric is not a gauge: ${name}`);
 			}
+
+			throw new Error(`Existing metric is not a gauge: ${name}`);
 		}
 
 		const gauge = new Gauge({

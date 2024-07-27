@@ -1,14 +1,14 @@
+import { DeepMocked, createMock } from "@golevelup/ts-jest";
 import { Test } from "@nestjs/testing";
-import { createMock, DeepMocked } from "@golevelup/ts-jest";
 
 import { Registry as PrometheusRegistry } from "prom-client";
 
+import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
 import { FfxivController } from "./ffxiv.controller";
 import { FfxivService } from "./ffxiv.service";
-import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
 
-import { ServerStatus } from "./enums/server-status.enum";
 import { ServerCategory } from "./enums/server-category.enum";
+import { ServerStatus } from "./enums/server-status.enum";
 
 describe("FfxivController", () => {
 	let ffxivController: FfxivController;

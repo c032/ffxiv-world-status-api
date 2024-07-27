@@ -1,11 +1,11 @@
-import { Injectable, Inject } from "@nestjs/common";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Inject, Injectable } from "@nestjs/common";
 import { Cache } from "cache-manager";
 
 import { PgPoolService } from "../database/pg-pool.service";
 import { isArray } from "../lib/narrowing";
 
-import { toFfxivWorld, asFfxivWorld } from "./ffxiv.mapper";
+import { asFfxivWorld, toFfxivWorld } from "./ffxiv.mapper";
 
 import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
 
