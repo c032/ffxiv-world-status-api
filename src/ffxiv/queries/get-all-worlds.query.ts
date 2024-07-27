@@ -1,18 +1,18 @@
 import { sql } from "@pgtyped/runtime";
 
 export interface GetAllWorldsQueryResult {
-  batch_id: number;
-  worldstatus_timestamp: Date;
-  world_group: string;
-  world_name: string;
-  world_category: string;
-  world_status: string;
-  can_create_new_characters: boolean;
+	batch_id: number;
+	worldstatus_timestamp: Date;
+	world_group: string;
+	world_name: string;
+	world_category: string;
+	world_status: string;
+	can_create_new_characters: boolean;
 }
 
 export const getAllWorldsQuery = sql<{
-  params: Record<string, never>;
-  result: GetAllWorldsQueryResult;
+	params: Record<string, never>;
+	result: GetAllWorldsQueryResult;
 }>`
   select
     batch_id,

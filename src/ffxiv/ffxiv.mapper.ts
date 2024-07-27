@@ -14,98 +14,98 @@ import { GetWorldGroupQueryResult } from "./queries/get-world-group.query";
 import { GetWorldQueryResult } from "./queries/get-world.query";
 
 export function toFfxivWorldDto(world: FfxivWorld): FfxivWorldDto {
-  return {
-    group: world.group,
-    name: world.name,
-    category: world.category,
-    serverStatus: world.serverStatus,
-    canCreateNewCharacters: world.canCreateNewCharacters,
+	return {
+		group: world.group,
+		name: world.name,
+		category: world.category,
+		serverStatus: world.serverStatus,
+		canCreateNewCharacters: world.canCreateNewCharacters,
 
-    isOnline: world.serverStatus === ServerStatus.Online,
-    isMaintenance:
-      world.serverStatus === ServerStatus.Maintenance ||
-      world.serverStatus === ServerStatus.PartialMaintenance,
+		isOnline: world.serverStatus === ServerStatus.Online,
+		isMaintenance:
+			world.serverStatus === ServerStatus.Maintenance ||
+			world.serverStatus === ServerStatus.PartialMaintenance,
 
-    isCongested: world.category === ServerCategory.Congested,
-    isPreferred: world.category === ServerCategory.Preferred,
-    isNew: world.category === ServerCategory.New,
-  };
+		isCongested: world.category === ServerCategory.Congested,
+		isPreferred: world.category === ServerCategory.Preferred,
+		isNew: world.category === ServerCategory.New,
+	};
 }
 
 export function toFfxivWorldResponseDto(
-  world: FfxivWorld,
+	world: FfxivWorld,
 ): FfxivWorldResponseDto {
-  return {
-    world: toFfxivWorldDto(world),
-  };
+	return {
+		world: toFfxivWorldDto(world),
+	};
 }
 
 export function toFfxivWorldsResponseDto(
-  worlds: FfxivWorld[],
+	worlds: FfxivWorld[],
 ): FfxivWorldsResponseDto {
-  return {
-    worlds: worlds.map<FfxivWorldDto>((world) => toFfxivWorldDto(world)),
-  };
+	return {
+		worlds: worlds.map<FfxivWorldDto>((world) => toFfxivWorldDto(world)),
+	};
 }
 
 function isServerCategory(
-  maybeServerCategory: string,
+	maybeServerCategory: string,
 ): maybeServerCategory is ServerCategory {
-  return Object.values(ServerCategory)
-    .map((v) => v.toString())
-    .includes(maybeServerCategory);
+	return Object.values(ServerCategory)
+		.map((v) => v.toString())
+		.includes(maybeServerCategory);
 }
 
 export function toServerCategory(maybeServerCategory: string): ServerCategory {
-  if (!isServerCategory(maybeServerCategory)) {
-    throw new Error(`Not a server category: ${maybeServerCategory}`);
-  }
+	if (!isServerCategory(maybeServerCategory)) {
+		throw new Error(`Not a server category: ${maybeServerCategory}`);
+	}
 
-  return maybeServerCategory;
+	return maybeServerCategory;
 }
 
 function isServerStatus(
-  maybeServerStatus: string,
+	maybeServerStatus: string,
 ): maybeServerStatus is ServerStatus {
-  return Object.values(ServerStatus)
-    .map((v) => v.toString())
-    .includes(maybeServerStatus);
+	return Object.values(ServerStatus)
+		.map((v) => v.toString())
+		.includes(maybeServerStatus);
 }
 
 export function toServerStatus(maybeServerStatus: string): ServerStatus {
-  if (!isServerStatus(maybeServerStatus)) {
-    throw new Error(`Not a server status: ${maybeServerStatus}`);
-  }
+	if (!isServerStatus(maybeServerStatus)) {
+		throw new Error(`Not a server status: ${maybeServerStatus}`);
+	}
 
-  return maybeServerStatus;
+	return maybeServerStatus;
 }
 
 export function toFfxivWorld(
-  row: GetAllWorldsQueryResult | GetWorldGroupQueryResult | GetWorldQueryResult,
+	row: GetAllWorldsQueryResult | GetWorldGroupQueryResult | GetWorldQueryResult,
 ): FfxivWorld {
-  const ffxivWorld: FfxivWorld = {
-    group: row.world_group,
-    name: row.world_name,
-    category: toServerCategory(row.world_category),
-    serverStatus: toServerStatus(row.world_status),
-    canCreateNewCharacters: row.can_create_new_characters,
-  };
+	const ffxivWorld: FfxivWorld = {
+		group: row.world_group,
+		name: row.world_name,
+		category: toServerCategory(row.world_category),
+		serverStatus: toServerStatus(row.world_status),
+		canCreateNewCharacters: row.can_create_new_characters,
+	};
 
-  return ffxivWorld;
+	return ffxivWorld;
 }
 
 export function asFfxivWorld(input: unknown): FfxivWorld {
-  if (!isObject(input)) {
-    throw new Error("input is not an object");
-  }
+	if (!isObject(input)) {
+		throw new Error("input is not an object");
+	}
 
-  const ffxivWorld: FfxivWorld = {
-    group: asString(input.group),
-    name: asString(input.name),
-    category: toServerCategory(asString(input.category)),
-    serverStatus: toServerStatus(asString(input.serverStatus)),
-    canCreateNewCharacters: asBoolean(input.canCreateNewCharacters),
-  };
+	const ffxivWorld: FfxivWorld = {
+		group: asString(input.group),
+		name: asString(input.name),
+		category: toServerCategory(asString(input.category)),
+		serverStatus: toServerStatus(asString(input.serverStatus)),
+		canCreateNewCharacters: asBoolean(input.canCreateNewCharacters),
+	};
 
-  return ffxivWorld;
+	return ffxivWorld;
 }

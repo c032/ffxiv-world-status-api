@@ -1,23 +1,23 @@
 import { sql } from "@pgtyped/runtime";
 
 export interface GetWorldQueryParams {
-  groupName: string;
-  worldName: string;
+	groupName: string;
+	worldName: string;
 }
 
 export interface GetWorldQueryResult {
-  batch_id: number;
-  worldstatus_timestamp: Date;
-  world_group: string;
-  world_name: string;
-  world_category: string;
-  world_status: string;
-  can_create_new_characters: boolean;
+	batch_id: number;
+	worldstatus_timestamp: Date;
+	world_group: string;
+	world_name: string;
+	world_category: string;
+	world_status: string;
+	can_create_new_characters: boolean;
 }
 
 export const getWorldQuery = sql<{
-  params: GetWorldQueryParams;
-  result: GetWorldQueryResult;
+	params: GetWorldQueryParams;
+	result: GetWorldQueryResult;
 }>`
   select
     batch_id,

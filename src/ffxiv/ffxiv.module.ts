@@ -9,17 +9,17 @@ import { FfxivService } from "./ffxiv.service";
 import { FfxivPrometheusService } from "./ffxiv-prometheus.service";
 
 @Module({
-  imports: [PostgresqlModule],
-  controllers: [FfxivController],
-  providers: [
-    FfxivService,
-    {
-      provide: "FfxivPrometheusRegistry",
-      useFactory: () => {
-        return new PrometheusRegistry();
-      },
-    },
-    FfxivPrometheusService,
-  ],
+	imports: [PostgresqlModule],
+	controllers: [FfxivController],
+	providers: [
+		FfxivService,
+		{
+			provide: "FfxivPrometheusRegistry",
+			useFactory: () => {
+				return new PrometheusRegistry();
+			},
+		},
+		FfxivPrometheusService,
+	],
 })
 export class FfxivModule {}
