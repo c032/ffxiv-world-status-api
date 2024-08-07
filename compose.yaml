@@ -30,7 +30,7 @@ services:
     healthcheck:
       interval: "5s"
       retries: "5"
-      test: ["CMD-SHELL", "pg_isready -U ffxiv_world_status_api"]
+      test: ["CMD-SHELL", "pg_isready -U development_ffxiv_world_status_api"]
       timeout: "5s"
     image: "postgres:16.3-alpine3.20"
     volumes:
