@@ -36,12 +36,6 @@ export class FfxivController {
 		return toFfxivWorldsResponseDto(worlds);
 	}
 
-	/*
-  @Get("/history/worlds")
-  public async getHistoryWorlds(): Promise<FfxivHistoryWorldsDto> {
-  }
-  */
-
 	@Get("/worlds/:worldgroup")
 	public async getWorldGroup(
 		@Param("worldgroup") worldGroupName: string,
