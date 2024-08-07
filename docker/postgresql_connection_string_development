@@ -1,1 +1,1 @@
-host=postgresql user=development_website password='correct horse battery staple' dbname=development_website sslmode=disable
+host=postgresql user=development_ffxiv_world_status_api password='correct horse battery staple' dbname=development_ffxiv_world_status sslmode=disable

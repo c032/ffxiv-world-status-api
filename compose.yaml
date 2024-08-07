@@ -1,4 +1,4 @@
-name: "c032_website_api"
+name: "ffxiv_world_status_api"
 
 services:
   api-development:
@@ -9,27 +9,28 @@ services:
       postgresql:
         condition: "service_healthy"
     environment:
-      - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/api.c032.dev/postgresql_connection_string_development"
+      - "CORS_ORIGIN=https://ffxiv.c032.dev"
+      - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/ffxiv-world-status-api/postgresql_connection_string_development"
       - "PORT=8000"
     links:
       - "postgresql:postgresql"
     ports:
       - "127.0.0.1:3000:8000"
     volumes:
-      - "./docker/postgresql_connection_string_development:/usr/local/etc/api.c032.dev/postgresql_connection_string_development"
+      - "./docker/postgresql_connection_string_development:/usr/local/etc/ffxiv-world-status-api/postgresql_connection_string_development"
 
   postgresql:
     environment:
       - "PGDATA=/var/lib/postgresql/data/pgdata"
-      - "POSTGRES_DB=development_website"
+      - "POSTGRES_DB=development_ffxiv_world_status"
       - "POSTGRES_HOST_AUTH_METHOD=scram-sha-256"
       - "POSTGRES_INITDB_ARGS=--no-locale --data-checksums --auth-host=scram-sha-256"
       - "POSTGRES_PASSWORD=correct horse battery staple"
-      - "POSTGRES_USER=development_website"
+      - "POSTGRES_USER=development_ffxiv_world_status_api"
     healthcheck:
       interval: "5s"
       retries: "5"
-      test: ["CMD-SHELL", "pg_isready -U development_website"]
+      test: ["CMD-SHELL", "pg_isready -U ffxiv_world_status_api"]
       timeout: "5s"
     image: "postgres:16.3-alpine3.20"
     volumes:

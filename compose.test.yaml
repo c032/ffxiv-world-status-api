@@ -1,4 +1,4 @@
-name: "c032_website_api_test"
+name: "ffxiv_world_status_api_test"
 
 services:
   api-e2e:
@@ -9,12 +9,12 @@ services:
       postgresql:
         condition: "service_healthy"
     environment:
-      - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/api.c032.dev/postgresql_connection_string_test"
+      - "POSTGRESQL_CONNECTION_STRING_FILE=/usr/local/etc/ffxiv-world-status-api/postgresql_connection_string_test"
       - "PORT=8000"
     links:
       - "postgresql:postgresql"
     volumes:
-      - "./docker/postgresql_connection_string_test:/usr/local/etc/api.c032.dev/postgresql_connection_string_test"
+      - "./docker/postgresql_connection_string_test:/usr/local/etc/ffxiv-world-status-api/postgresql_connection_string_test"
 
   postgresql:
     build:
@@ -30,7 +30,7 @@ services:
     healthcheck:
       interval: "5s"
       retries: "5"
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U test_api_e2e"]
       timeout: "5s"
     volumes:
       - type: "tmpfs"

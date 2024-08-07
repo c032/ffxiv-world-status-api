@@ -1,4 +1,4 @@
-# `website-api`
+# `ffxiv-world-status-api`
 
 ## Features
 

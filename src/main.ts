@@ -6,8 +6,7 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
 	const corsOptions = {
-		// TODO: Get from config.
-		origin: "https://c032.dev",
+		origin: process.env.CORS_ORIGIN,
 	};
 	app.enableCors(corsOptions);
 
