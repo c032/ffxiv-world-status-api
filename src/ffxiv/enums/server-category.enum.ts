@@ -1,4 +1,7 @@
 export enum ServerCategory {
+	// This seems to be the value during maintenance.
+	Unavailable = "--",
+
 	Standard = "Standard",
 	Preferred = "Preferred",
 	Congested = "Congested",
