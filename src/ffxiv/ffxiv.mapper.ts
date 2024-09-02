@@ -1,4 +1,4 @@
-import { asBoolean, asString, isObject } from "../lib/narrowing";
+import { assertBoolean, assertString, isObject } from "../lib/narrowing";
 
 import { FfxivWorld } from "./interfaces/ffxiv-world.interface";
 
@@ -56,7 +56,9 @@ function isServerCategory(
 		.includes(maybeServerCategory);
 }
 
-export function toServerCategory(maybeServerCategory: string): ServerCategory {
+export function assertServerCategory(
+	maybeServerCategory: string,
+): ServerCategory {
 	if (!isServerCategory(maybeServerCategory)) {
 		throw new Error(`Not a server category: ${maybeServerCategory}`);
 	}
@@ -72,7 +74,7 @@ function isServerStatus(
 		.includes(maybeServerStatus);
 }
 
-export function toServerStatus(maybeServerStatus: string): ServerStatus {
+export function assertServerStatus(maybeServerStatus: string): ServerStatus {
 	if (!isServerStatus(maybeServerStatus)) {
 		throw new Error(`Not a server status: ${maybeServerStatus}`);
 	}
@@ -86,8 +88,8 @@ export function toFfxivWorld(
 	const ffxivWorld: FfxivWorld = {
 		group: row.world_group,
 		name: row.world_name,
-		category: toServerCategory(row.world_category),
-		serverStatus: toServerStatus(row.world_status),
+		category: assertServerCategory(row.world_category),
+		serverStatus: assertServerStatus(row.world_status),
 		canCreateNewCharacters: row.can_create_new_characters,
 	};
 
@@ -100,11 +102,11 @@ export function asFfxivWorld(input: unknown): FfxivWorld {
 	}
 
 	const ffxivWorld: FfxivWorld = {
-		group: asString(input.group),
-		name: asString(input.name),
-		category: toServerCategory(asString(input.category)),
-		serverStatus: toServerStatus(asString(input.serverStatus)),
-		canCreateNewCharacters: asBoolean(input.canCreateNewCharacters),
+		group: assertString(input.group),
+		name: assertString(input.name),
+		category: assertServerCategory(assertString(input.category)),
+		serverStatus: assertServerStatus(assertString(input.serverStatus)),
+		canCreateNewCharacters: assertBoolean(input.canCreateNewCharacters),
 	};
 
 	return ffxivWorld;

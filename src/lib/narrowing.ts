@@ -8,7 +8,7 @@ export function isObject(
 	return !!value && typeof value === "object";
 }
 
-export function asString(value: unknown): string {
+export function assertString(value: unknown): string {
 	if (typeof value !== "string") {
 		throw new Error("value is not a string");
 	}
@@ -16,7 +16,7 @@ export function asString(value: unknown): string {
 	return value;
 }
 
-export function asBoolean(value: unknown): boolean {
+export function assertBoolean(value: unknown): boolean {
 	if (typeof value !== "boolean") {
 		throw new Error("value is not boolean");
 	}
